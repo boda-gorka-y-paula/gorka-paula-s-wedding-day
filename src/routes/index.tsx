@@ -6,14 +6,58 @@ import { Heart, Menu, X } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Gorka & Paula | Wedding" },
-      { name: "description", content: "Join us to celebrate the wedding of Gorka and Paula." },
-      { property: "og:title", content: "Gorka & Paula | Wedding" },
-      { property: "og:description", content: "Join us to celebrate the wedding of Gorka and Paula." },
+      { title: "Gorka & Paula | Boda" },
+      { name: "description", content: "Acompáñanos a celebrar la boda de Gorka y Paula el 11 de octubre de 2026 en Bilbao, España." },
+      { property: "og:title", content: "Gorka & Paula | Boda" },
+      { property: "og:description", content: "Acompáñanos a celebrar la boda de Gorka y Paula el 11 de octubre de 2026 en Bilbao, España." },
     ],
   }),
   component: Index,
 });
+
+const WEDDING_DATE = new Date("2026-10-11T16:00:00");
+
+function Countdown() {
+  const calc = () => {
+    const diff = WEDDING_DATE.getTime() - Date.now();
+    const clamped = Math.max(diff, 0);
+    return {
+      days: Math.floor(clamped / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((clamped / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((clamped / (1000 * 60)) % 60),
+      seconds: Math.floor((clamped / 1000) % 60),
+    };
+  };
+
+  const [time, setTime] = useState(calc);
+
+  useEffect(() => {
+    const id = setInterval(() => setTime(calc()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const units = [
+    { label: "Días", value: time.days },
+    { label: "Horas", value: time.hours },
+    { label: "Minutos", value: time.minutes },
+    { label: "Segundos", value: time.seconds },
+  ];
+
+  return (
+    <div className="flex items-center justify-center gap-4 md:gap-8">
+      {units.map((unit) => (
+        <div key={unit.label} className="flex flex-col items-center">
+          <span className="font-heading text-4xl md:text-6xl text-foreground tabular-nums">
+            {String(unit.value).padStart(2, "0")}
+          </span>
+          <span className="text-xs md:text-sm tracking-widest uppercase text-muted-foreground mt-1">
+            {unit.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function Index() {
   const [scrolled, setScrolled] = useState(false);
@@ -26,10 +70,10 @@ function Index() {
   }, []);
 
   const navLinks = [
-    { label: "Home", href: "#home" },
-    { label: "Our Story", href: "#story" },
-    { label: "Details", href: "#details" },
-    { label: "Schedule", href: "#schedule" },
+    { label: "Inicio", href: "#home" },
+    { label: "Nuestra Historia", href: "#story" },
+    { label: "Detalles", href: "#details" },
+    { label: "Programa", href: "#schedule" },
   ];
 
   return (
@@ -122,7 +166,7 @@ function Index() {
 
         <div className="relative z-10 max-w-2xl">
           <p className="text-sm md:text-base tracking-[0.3em] uppercase text-muted-foreground mb-6">
-            We are getting married
+            Nos casamos
           </p>
           <h1 className="font-heading text-6xl md:text-8xl lg:text-9xl text-foreground leading-[0.9] mb-4">
             Gorka
@@ -136,15 +180,18 @@ function Index() {
             Paula
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground tracking-wide">
-            Saturday, June 20, 2026
+            Domingo, 11 de octubre de 2026
           </p>
           <p className="text-base text-muted-foreground mt-1">
-            Bilbao, Spain
+            Bilbao, España
           </p>
+          <div className="mt-12">
+            <Countdown />
+          </div>
         </div>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <a href="#story" aria-label="Scroll down">
+          <a href="#story" aria-label="Desplázate hacia abajo">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground">
               <path d="M12 5v14M5 12l7 7 7-7" />
             </svg>
@@ -160,8 +207,8 @@ function Index() {
               <div className="w-20 h-20 rounded-full bg-border flex items-center justify-center">
                 <Heart size={32} className="text-muted-foreground/50" />
               </div>
-              <p className="text-sm tracking-widest uppercase">Photo of the couple</p>
-              <p className="text-xs text-muted-foreground/60">Upload your photo here</p>
+              <p className="text-sm tracking-widest uppercase">Foto de la pareja</p>
+              <p className="text-xs text-muted-foreground/60">Sube tu foto aquí</p>
             </div>
           </div>
         </div>
@@ -170,9 +217,9 @@ function Index() {
       {/* Our Story Section */}
       <section id="story" className="py-20 md:py-32 px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">Our Story</p>
+          <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">Nuestra Historia</p>
           <h2 className="font-heading text-4xl md:text-6xl text-foreground mb-12">
-            How We Met
+            Cómo Nos Conocimos
           </h2>
 
           <div className="grid md:grid-cols-2 gap-12 items-center text-left">
@@ -181,21 +228,21 @@ function Index() {
                 <div className="w-16 h-16 rounded-full bg-border flex items-center justify-center">
                   <Heart size={24} className="text-muted-foreground/50" />
                 </div>
-                <p className="text-xs tracking-widest uppercase">Couple Photo</p>
+                <p className="text-xs tracking-widest uppercase">Foto de la pareja</p>
               </div>
             </div>
             <div className="space-y-6">
               <p className="text-muted-foreground leading-relaxed">
-                Every love story is beautiful, but ours is our favorite. We met in a moment that felt like fate,
-                and since then, every day has been an adventure we choose to share together.
+                Cada historia de amor es bonita, pero la nuestra es nuestra favorita. Nos conocimos en un momento
+                que pareció cosa del destino, y desde entonces cada día ha sido una aventura que elegimos compartir juntos.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Through laughter, travel, quiet mornings, and everything in between, we have built a life
-                that feels like home — because home is wherever we are together.
+                Entre risas, viajes, mañanas tranquilas y todo lo que hay en medio, hemos construido una vida
+                que se siente como un hogar — porque el hogar es allá donde estamos juntos.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Now we are ready to take the next step, surrounded by the people who mean the most to us.
-                We cannot wait to celebrate this new chapter with you.
+                Ahora estamos listos para dar el siguiente paso, rodeados de las personas que más nos importan.
+                No podemos esperar a celebrar este nuevo capítulo contigo.
               </p>
             </div>
           </div>
@@ -206,9 +253,9 @@ function Index() {
       <section id="details" className="py-20 md:py-32 px-6 bg-secondary/30">
         <div className="mx-auto max-w-5xl">
           <div className="text-center mb-16">
-            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">The Details</p>
+            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">Los Detalles</p>
             <h2 className="font-heading text-4xl md:text-6xl text-foreground">
-              When & Where
+              Cuándo y Dónde
             </h2>
           </div>
 
@@ -220,9 +267,9 @@ function Index() {
                   <path d="M16 2v4M8 2v4M3 10h18" />
                 </svg>
               </div>
-              <h3 className="font-heading text-2xl text-foreground mb-3">Date</h3>
-              <p className="text-muted-foreground">Saturday</p>
-              <p className="text-foreground font-medium text-lg">June 20, 2026</p>
+              <h3 className="font-heading text-2xl text-foreground mb-3">Fecha</h3>
+              <p className="text-muted-foreground">Domingo</p>
+              <p className="text-foreground font-medium text-lg">11 de octubre de 2026</p>
             </div>
 
             <div className="text-center p-8 rounded-2xl bg-card border border-border">
@@ -232,10 +279,10 @@ function Index() {
                   <circle cx="12" cy="10" r="3" />
                 </svg>
               </div>
-              <h3 className="font-heading text-2xl text-foreground mb-3">Ceremony</h3>
-              <p className="text-muted-foreground">Basilica of Begoña</p>
-              <p className="text-foreground font-medium text-lg">Bilbao, Spain</p>
-              <p className="text-sm text-muted-foreground mt-2">4:00 PM</p>
+              <h3 className="font-heading text-2xl text-foreground mb-3">Ceremonia</h3>
+              <p className="text-muted-foreground">Basílica de Begoña</p>
+              <p className="text-foreground font-medium text-lg">Bilbao, España</p>
+              <p className="text-sm text-muted-foreground mt-2">16:00 h</p>
             </div>
 
             <div className="text-center p-8 rounded-2xl bg-card border border-border">
@@ -245,10 +292,10 @@ function Index() {
                   <path d="M6 12v5c0 2 3 4 6 4s6-2 6-4v-5" />
                 </svg>
               </div>
-              <h3 className="font-heading text-2xl text-foreground mb-3">Reception</h3>
-              <p className="text-muted-foreground">Grand Hotel</p>
-              <p className="text-foreground font-medium text-lg">Bilbao, Spain</p>
-              <p className="text-sm text-muted-foreground mt-2">7:00 PM</p>
+              <h3 className="font-heading text-2xl text-foreground mb-3">Banquete</h3>
+              <p className="text-muted-foreground">Gran Hotel</p>
+              <p className="text-foreground font-medium text-lg">Bilbao, España</p>
+              <p className="text-sm text-muted-foreground mt-2">19:00 h</p>
             </div>
           </div>
         </div>
@@ -258,9 +305,9 @@ function Index() {
       <section id="schedule" className="py-20 md:py-32 px-6">
         <div className="mx-auto max-w-3xl">
           <div className="text-center mb-16">
-            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">The Day</p>
+            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">El Día</p>
             <h2 className="font-heading text-4xl md:text-6xl text-foreground">
-              Schedule
+              Programa
             </h2>
           </div>
 
@@ -269,11 +316,11 @@ function Index() {
             <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-px" />
 
             {[
-              { time: "3:30 PM", title: "Guest Arrival", desc: "Guests arrive at the Basilica of Begoña" },
-              { time: "4:00 PM", title: "Ceremony", desc: "The wedding ceremony begins" },
-              { time: "5:30 PM", title: "Cocktail Hour", desc: "Drinks and appetizers at the church gardens" },
-              { time: "7:00 PM", title: "Reception", desc: "Dinner and celebration at the Grand Hotel" },
-              { time: "12:00 AM", title: "Last Dance", desc: "A magical end to a perfect day" },
+              { time: "15:30 h", title: "Llegada de Invitados", desc: "Los invitados llegan a la Basílica de Begoña" },
+              { time: "16:00 h", title: "Ceremonia", desc: "Comienza la ceremonia de la boda" },
+              { time: "17:30 h", title: "Cóctel", desc: "Bebidas y aperitivos en los jardines de la iglesia" },
+              { time: "19:00 h", title: "Banquete", desc: "Cena y celebración en el Gran Hotel" },
+              { time: "00:00 h", title: "Último Baile", desc: "Un final mágico para un día perfecto" },
             ].map((item, i) => (
               <div key={i} className={`relative flex items-start gap-8 mb-12 ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}>
                 <div className="hidden md:block md:w-1/2 md:text-right">
@@ -321,9 +368,9 @@ function Index() {
       <section className="py-20 md:py-32 px-6 bg-secondary/30">
         <div className="mx-auto max-w-5xl">
           <div className="text-center mb-16">
-            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">Memories</p>
+            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">Recuerdos</p>
             <h2 className="font-heading text-4xl md:text-6xl text-foreground">
-              Gallery
+              Galería
             </h2>
           </div>
 
@@ -335,7 +382,7 @@ function Index() {
               >
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted-foreground">
                   <Heart size={20} className="text-muted-foreground/40" />
-                  <p className="text-[10px] tracking-widest uppercase">Photo {n}</p>
+                  <p className="text-[10px] tracking-widest uppercase">Foto {n}</p>
                 </div>
               </div>
             ))}
@@ -348,17 +395,17 @@ function Index() {
         <div className="mx-auto max-w-2xl text-center">
           <Heart size={32} className="mx-auto text-primary mb-6" />
           <h2 className="font-heading text-4xl md:text-6xl text-foreground mb-6">
-            Join Us
+            Acompáñanos
           </h2>
           <p className="text-muted-foreground mb-10 max-w-lg mx-auto leading-relaxed">
-            We would be honored to have you celebrate this special day with us.
-            Please let us know if you can make it by June 1st, 2026.
+            Sería un honor que celebraras este día tan especial con nosotros.
+            Por favor, confírmanos tu asistencia antes del 1 de septiembre de 2026.
           </p>
           <Link
             to="/rsvp"
             className="inline-flex items-center justify-center px-10 py-4 rounded-full bg-primary text-primary-foreground text-sm tracking-widest uppercase hover:bg-primary/90 transition-all duration-300"
           >
-            RSVP Now
+            Confirmar Asistencia
           </Link>
         </div>
       </section>
@@ -370,7 +417,7 @@ function Index() {
             Gorka <span className="text-primary">&</span> Paula
           </p>
           <p className="text-sm text-muted-foreground">
-            June 20, 2026 · Bilbao, Spain
+            11 de octubre de 2026 · Bilbao, España
           </p>
         </div>
       </footer>
