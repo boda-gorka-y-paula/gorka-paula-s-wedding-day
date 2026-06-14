@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { LanguageProvider } from "../hooks/language-context";
 
 function NotFoundComponent() {
   return (
@@ -78,10 +79,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Gorka & Paula | Boda" },
-      { name: "description", content: "Acompáñanos a celebrar la boda de Gorka y Paula el 11 de octubre de 2026 en Bilbao, España." },
+      { name: "description", content: "Acompáñanos a celebrar la boda de Gorka y Paula el 11 de octubre de 2026 en Valencia, España." },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "Gorka & Paula | Boda" },
-      { property: "og:description", content: "Acompáñanos a celebrar la boda de Gorka y Paula el 11 de octubre de 2026 en Bilbao, España." },
+      { property: "og:description", content: "Acompáñanos a celebrar la boda de Gorka y Paula el 11 de octubre de 2026 en Valencia, España." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
@@ -131,8 +132,10 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <LanguageProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
