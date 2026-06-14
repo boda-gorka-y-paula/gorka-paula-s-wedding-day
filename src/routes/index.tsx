@@ -2,20 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { Heart, Menu, X } from "lucide-react";
+import { useLanguage } from "../hooks/language-context";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Gorka & Paula | Boda" },
-      { name: "description", content: "Acompáñanos a celebrar la boda de Gorka y Paula el 11 de octubre de 2026 en Bilbao, España." },
+      { name: "description", content: "Acompáñanos a celebrar la boda de Gorka y Paula el 11 de octubre de 2026 en Valencia, España." },
       { property: "og:title", content: "Gorka & Paula | Boda" },
-      { property: "og:description", content: "Acompáñanos a celebrar la boda de Gorka y Paula el 11 de octubre de 2026 en Bilbao, España." },
+      { property: "og:description", content: "Acompáñanos a celebrar la boda de Gorka y Paula el 11 de octubre de 2026 en Valencia, España." },
     ],
   }),
   component: Index,
 });
 
-const WEDDING_DATE = new Date("2026-10-11T16:00:00");
+const WEDDING_DATE = new Date("2026-10-11T12:00:00");
 
 function Countdown() {
   const calc = () => {
@@ -36,11 +38,13 @@ function Countdown() {
     return () => clearInterval(id);
   }, []);
 
+  const { t } = useLanguage();
+
   const units = [
-    { label: "Días", value: time.days },
-    { label: "Horas", value: time.hours },
-    { label: "Minutos", value: time.minutes },
-    { label: "Segundos", value: time.seconds },
+    { label: t("countdown.days"), value: time.days },
+    { label: t("countdown.hours"), value: time.hours },
+    { label: t("countdown.minutes"), value: time.minutes },
+    { label: t("countdown.seconds"), value: time.seconds },
   ];
 
   return (
@@ -60,8 +64,17 @@ function Countdown() {
 }
 
 function Index() {
+  const { t, language } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    document.title = t("meta.title");
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", t("meta.description"));
+    }
+  }, [language, t]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -70,10 +83,10 @@ function Index() {
   }, []);
 
   const navLinks = [
-    { label: "Inicio", href: "#home" },
-    { label: "Nuestra Historia", href: "#story" },
-    { label: "Detalles", href: "#details" },
-    { label: "Programa", href: "#schedule" },
+    { label: t("nav.home"), href: "#home" },
+    { label: t("nav.story"), href: "#story" },
+    { label: t("nav.details"), href: "#details" },
+    { label: t("nav.schedule"), href: "#schedule" },
   ];
 
   return (
@@ -106,18 +119,22 @@ function Index() {
               to="/rsvp"
               className="text-sm tracking-widest uppercase px-5 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
             >
-              RSVP
+              {t("nav.rsvp")}
             </Link>
+            <LanguageSwitcher />
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            className="md:hidden p-2 text-foreground"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile actions (Switcher + Menu button) */}
+          <div className="flex md:hidden items-center gap-3">
+            <LanguageSwitcher />
+            <button
+              className="p-2 text-foreground"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile nav */}
@@ -138,7 +155,7 @@ function Index() {
               onClick={() => setMobileOpen(false)}
               className="text-sm tracking-widest uppercase px-5 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 text-center"
             >
-              RSVP
+              {t("nav.rsvp")}
             </Link>
           </div>
         )}
@@ -166,7 +183,7 @@ function Index() {
 
         <div className="relative z-10 max-w-2xl">
           <p className="text-sm md:text-base tracking-[0.3em] uppercase text-muted-foreground mb-6">
-            Nos casamos
+            {t("hero.wedding")}
           </p>
           <h1 className="font-heading text-6xl md:text-8xl lg:text-9xl text-foreground leading-[0.9] mb-4">
             Gorka
@@ -180,10 +197,10 @@ function Index() {
             Paula
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground tracking-wide">
-            Domingo, 11 de octubre de 2026
+            {t("hero.date")}
           </p>
           <p className="text-base text-muted-foreground mt-1">
-            Bilbao, España
+            {t("hero.location")}
           </p>
           <div className="mt-12">
             <Countdown />
@@ -207,8 +224,8 @@ function Index() {
               <div className="w-20 h-20 rounded-full bg-border flex items-center justify-center">
                 <Heart size={32} className="text-muted-foreground/50" />
               </div>
-              <p className="text-sm tracking-widest uppercase">Foto de la pareja</p>
-              <p className="text-xs text-muted-foreground/60">Sube tu foto aquí</p>
+              <p className="text-sm tracking-widest uppercase">{t("photo.couple")}</p>
+              <p className="text-xs text-muted-foreground/60">{t("photo.upload")}</p>
             </div>
           </div>
         </div>
@@ -217,9 +234,9 @@ function Index() {
       {/* Our Story Section */}
       <section id="story" className="py-20 md:py-32 px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">Nuestra Historia</p>
+          <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">{t("story.title")}</p>
           <h2 className="font-heading text-4xl md:text-6xl text-foreground mb-12">
-            Cómo Nos Conocimos
+            {t("story.subtitle")}
           </h2>
 
           <div className="grid md:grid-cols-2 gap-12 items-center text-left">
@@ -228,21 +245,18 @@ function Index() {
                 <div className="w-16 h-16 rounded-full bg-border flex items-center justify-center">
                   <Heart size={24} className="text-muted-foreground/50" />
                 </div>
-                <p className="text-xs tracking-widest uppercase">Foto de la pareja</p>
+                <p className="text-xs tracking-widest uppercase">{t("photo.couple")}</p>
               </div>
             </div>
             <div className="space-y-6">
               <p className="text-muted-foreground leading-relaxed">
-                Cada historia de amor es bonita, pero la nuestra es nuestra favorita. Nos conocimos en un momento
-                que pareció cosa del destino, y desde entonces cada día ha sido una aventura que elegimos compartir juntos.
+                {t("story.p1")}
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Entre risas, viajes, mañanas tranquilas y todo lo que hay en medio, hemos construido una vida
-                que se siente como un hogar — porque el hogar es allá donde estamos juntos.
+                {t("story.p2")}
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                Ahora estamos listos para dar el siguiente paso, rodeados de las personas que más nos importan.
-                No podemos esperar a celebrar este nuevo capítulo contigo.
+                {t("story.p3")}
               </p>
             </div>
           </div>
@@ -253,49 +267,81 @@ function Index() {
       <section id="details" className="py-20 md:py-32 px-6 bg-secondary/30">
         <div className="mx-auto max-w-5xl">
           <div className="text-center mb-16">
-            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">Los Detalles</p>
+            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">{t("details.title")}</p>
             <h2 className="font-heading text-4xl md:text-6xl text-foreground">
-              Cuándo y Dónde
+              {t("details.subtitle")}
             </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-            <div className="text-center p-8 rounded-2xl bg-card border border-border">
-              <div className="w-12 h-12 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary">
-                  <rect x="3" y="4" width="18" height="18" rx="2" />
-                  <path d="M16 2v4M8 2v4M3 10h18" />
-                </svg>
+            <div className="text-center p-8 rounded-2xl bg-card border border-border flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary">
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <path d="M16 2v4M8 2v4M3 10h18" />
+                  </svg>
+                </div>
+                <h3 className="font-heading text-2xl text-foreground mb-3">{t("details.date.title")}</h3>
+                <p className="text-muted-foreground">{t("details.date.day")}</p>
+                <p className="text-foreground font-medium text-lg">{t("details.date.val")}</p>
               </div>
-              <h3 className="font-heading text-2xl text-foreground mb-3">Fecha</h3>
-              <p className="text-muted-foreground">Domingo</p>
-              <p className="text-foreground font-medium text-lg">11 de octubre de 2026</p>
             </div>
 
-            <div className="text-center p-8 rounded-2xl bg-card border border-border">
-              <div className="w-12 h-12 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary">
-                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z" />
-                  <circle cx="12" cy="10" r="3" />
-                </svg>
+            <div className="text-center p-8 rounded-2xl bg-card border border-border flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary">
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                </div>
+                <h3 className="font-heading text-2xl text-foreground mb-3">{t("details.ceremony.title")}</h3>
+                <p className="text-muted-foreground">{t("details.ceremony.name")}</p>
+                <p className="text-foreground font-medium text-lg">{t("details.ceremony.loc")}</p>
+                <p className="text-sm text-muted-foreground mt-2">{t("details.ceremony.time")}</p>
               </div>
-              <h3 className="font-heading text-2xl text-foreground mb-3">Ceremonia</h3>
-              <p className="text-muted-foreground">Basílica de Begoña</p>
-              <p className="text-foreground font-medium text-lg">Bilbao, España</p>
-              <p className="text-sm text-muted-foreground mt-2">16:00 h</p>
+              <div className="mt-6">
+                <a
+                  href="https://maps.app.goo.gl/crgKXqZZXSvTvMV16"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-xs tracking-wider uppercase px-5 py-2.5 rounded-full border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-1">
+                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+                  </svg>
+                  {t("details.map.button")}
+                </a>
+              </div>
             </div>
 
-            <div className="text-center p-8 rounded-2xl bg-card border border-border">
-              <div className="w-12 h-12 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary">
-                  <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                  <path d="M6 12v5c0 2 3 4 6 4s6-2 6-4v-5" />
-                </svg>
+            <div className="text-center p-8 rounded-2xl bg-card border border-border flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c0 2 3 4 6 4s6-2 6-4v-5" />
+                  </svg>
+                </div>
+                <h3 className="font-heading text-2xl text-foreground mb-3">{t("details.celebration.title")}</h3>
+                <p className="text-muted-foreground">{t("details.celebration.name")}</p>
+                <p className="text-foreground font-medium text-lg">{t("details.celebration.loc")}</p>
+                <p className="text-sm text-muted-foreground mt-2">{t("details.celebration.time")}</p>
               </div>
-              <h3 className="font-heading text-2xl text-foreground mb-3">Banquete</h3>
-              <p className="text-muted-foreground">Gran Hotel</p>
-              <p className="text-foreground font-medium text-lg">Bilbao, España</p>
-              <p className="text-sm text-muted-foreground mt-2">19:00 h</p>
+              <div className="mt-6">
+                <a
+                  href="https://maps.app.goo.gl/TQtk4FcTAKgd5iHD6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-xs tracking-wider uppercase px-5 py-2.5 rounded-full border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-1">
+                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+                  </svg>
+                  {t("details.map.button")}
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -305,9 +351,9 @@ function Index() {
       <section id="schedule" className="py-20 md:py-32 px-6">
         <div className="mx-auto max-w-3xl">
           <div className="text-center mb-16">
-            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">El Día</p>
+            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">{t("schedule.title")}</p>
             <h2 className="font-heading text-4xl md:text-6xl text-foreground">
-              Programa
+              {t("schedule.subtitle")}
             </h2>
           </div>
 
@@ -316,11 +362,11 @@ function Index() {
             <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-px" />
 
             {[
-              { time: "15:30 h", title: "Llegada de Invitados", desc: "Los invitados llegan a la Basílica de Begoña" },
-              { time: "16:00 h", title: "Ceremonia", desc: "Comienza la ceremonia de la boda" },
-              { time: "17:30 h", title: "Cóctel", desc: "Bebidas y aperitivos en los jardines de la iglesia" },
-              { time: "19:00 h", title: "Banquete", desc: "Cena y celebración en el Gran Hotel" },
-              { time: "00:00 h", title: "Último Baile", desc: "Un final mágico para un día perfecto" },
+              { time: t("schedule.item1.time"), title: t("schedule.item1.title"), desc: t("schedule.item1.desc") },
+              { time: t("schedule.item2.time"), title: t("schedule.item2.title"), desc: t("schedule.item2.desc") },
+              { time: t("schedule.item3.time"), title: t("schedule.item3.title"), desc: t("schedule.item3.desc") },
+              { time: t("schedule.item4.time"), title: t("schedule.item4.title"), desc: t("schedule.item4.desc") },
+              { time: t("schedule.item5.time"), title: t("schedule.item5.title"), desc: t("schedule.item5.desc") },
             ].map((item, i) => (
               <div key={i} className={`relative flex items-start gap-8 mb-12 ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}>
                 <div className="hidden md:block md:w-1/2 md:text-right">
@@ -368,9 +414,9 @@ function Index() {
       <section className="py-20 md:py-32 px-6 bg-secondary/30">
         <div className="mx-auto max-w-5xl">
           <div className="text-center mb-16">
-            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">Recuerdos</p>
+            <p className="text-sm tracking-[0.3em] uppercase text-primary mb-4">{t("gallery.title")}</p>
             <h2 className="font-heading text-4xl md:text-6xl text-foreground">
-              Galería
+              {t("gallery.subtitle")}
             </h2>
           </div>
 
@@ -382,7 +428,9 @@ function Index() {
               >
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted-foreground">
                   <Heart size={20} className="text-muted-foreground/40" />
-                  <p className="text-[10px] tracking-widest uppercase">Foto {n}</p>
+                  <p className="text-[10px] tracking-widest uppercase">
+                    {t("gallery.photo", { n })}
+                  </p>
                 </div>
               </div>
             ))}
@@ -395,17 +443,16 @@ function Index() {
         <div className="mx-auto max-w-2xl text-center">
           <Heart size={32} className="mx-auto text-primary mb-6" />
           <h2 className="font-heading text-4xl md:text-6xl text-foreground mb-6">
-            Acompáñanos
+            {t("rsvp.section.title")}
           </h2>
           <p className="text-muted-foreground mb-10 max-w-lg mx-auto leading-relaxed">
-            Sería un honor que celebraras este día tan especial con nosotros.
-            Por favor, confírmanos tu asistencia antes del 1 de septiembre de 2026.
+            {t("rsvp.section.desc")}
           </p>
           <Link
             to="/rsvp"
             className="inline-flex items-center justify-center px-10 py-4 rounded-full bg-primary text-primary-foreground text-sm tracking-widest uppercase hover:bg-primary/90 transition-all duration-300"
           >
-            Confirmar Asistencia
+            {t("rsvp.section.button")}
           </Link>
         </div>
       </section>
@@ -414,10 +461,10 @@ function Index() {
       <footer className="py-12 px-6 border-t border-border">
         <div className="mx-auto max-w-6xl flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="font-heading text-xl text-foreground">
-            Gorka <span className="text-primary">&</span> Paula
+            {t("footer.title")}
           </p>
           <p className="text-sm text-muted-foreground">
-            11 de octubre de 2026 · Bilbao, España
+            {t("footer.details")}
           </p>
         </div>
       </footer>
