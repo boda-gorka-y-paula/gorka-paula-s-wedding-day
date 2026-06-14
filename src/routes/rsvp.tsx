@@ -6,10 +6,10 @@ import { Heart, ArrowLeft, Check } from "lucide-react";
 export const Route = createFileRoute("/rsvp")({
   head: () => ({
     meta: [
-      { title: "RSVP | Gorka & Paula Wedding" },
-      { name: "description", content: "RSVP for Gorka and Paula's wedding on June 20, 2026." },
-      { property: "og:title", content: "RSVP | Gorka & Paula Wedding" },
-      { property: "og:description", content: "RSVP for Gorka and Paula's wedding on June 20, 2026." },
+      { title: "Confirmar Asistencia | Boda de Gorka & Paula" },
+      { name: "description", content: "Confirma tu asistencia a la boda de Gorka y Paula el 11 de octubre de 2026." },
+      { property: "og:title", content: "Confirmar Asistencia | Boda de Gorka & Paula" },
+      { property: "og:description", content: "Confirma tu asistencia a la boda de Gorka y Paula el 11 de octubre de 2026." },
     ],
   }),
   component: RSVPPage,
@@ -38,7 +38,7 @@ function RSVPPage() {
         <div className="mx-auto max-w-4xl flex items-center justify-between">
           <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft size={16} />
-            Back to Home
+            Volver al Inicio
           </Link>
           <span className="font-heading text-lg text-foreground">
             G<span className="text-primary">&</span>P
@@ -53,17 +53,17 @@ function RSVPPage() {
               <div className="text-center mb-12">
                 <Heart size={28} className="mx-auto text-primary mb-4" />
                 <h1 className="font-heading text-4xl md:text-5xl text-foreground mb-3">
-                  RSVP
+                  Confirmar Asistencia
                 </h1>
                 <p className="text-muted-foreground">
-                  Kindly respond by June 1, 2026
+                  Por favor, responde antes del 1 de septiembre de 2026
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Full Name
+                    Nombre Completo
                   </label>
                   <input
                     type="text"
@@ -71,13 +71,13 @@ function RSVPPage() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-                    placeholder="Your full name"
+                    placeholder="Tu nombre completo"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Email
+                    Correo Electrónico
                   </label>
                   <input
                     type="email"
@@ -91,7 +91,7 @@ function RSVPPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-3">
-                    Will you be attending?
+                    ¿Asistirás?
                   </label>
                   <div className="flex gap-4">
                     <label className="flex-1 cursor-pointer">
@@ -104,7 +104,7 @@ function RSVPPage() {
                         className="sr-only peer"
                       />
                       <div className="text-center px-4 py-3 rounded-xl border border-border peer-checked:border-primary peer-checked:bg-primary/5 transition-all">
-                        <span className="text-foreground">Joyfully Accept</span>
+                        <span className="text-foreground">Encantado de asistir</span>
                       </div>
                     </label>
                     <label className="flex-1 cursor-pointer">
@@ -117,7 +117,7 @@ function RSVPPage() {
                         className="sr-only peer"
                       />
                       <div className="text-center px-4 py-3 rounded-xl border border-border peer-checked:border-primary peer-checked:bg-primary/5 transition-all">
-                        <span className="text-foreground">Regretfully Decline</span>
+                        <span className="text-foreground">No podré asistir</span>
                       </div>
                     </label>
                   </div>
@@ -127,30 +127,30 @@ function RSVPPage() {
                   <>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">
-                        Number of Guests
+                        Número de Invitados
                       </label>
                       <select
                         value={form.guests}
                         onChange={(e) => setForm({ ...form, guests: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none"
                       >
-                        <option value="1">1 Guest</option>
-                        <option value="2">2 Guests</option>
-                        <option value="3">3 Guests</option>
-                        <option value="4">4 Guests</option>
+                        <option value="1">1 Invitado</option>
+                        <option value="2">2 Invitados</option>
+                        <option value="3">3 Invitados</option>
+                        <option value="4">4 Invitados</option>
                       </select>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-2">
-                        Dietary Restrictions
+                        Restricciones Alimentarias
                       </label>
                       <input
                         type="text"
                         value={form.dietary}
                         onChange={(e) => setForm({ ...form, dietary: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-                        placeholder="Vegetarian, allergies, etc."
+                        placeholder="Vegetariano, alergias, etc."
                       />
                     </div>
                   </>
@@ -158,14 +158,14 @@ function RSVPPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Message for the Couple (Optional)
+                    Mensaje para la Pareja (Opcional)
                   </label>
                   <textarea
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     rows={4}
                     className="w-full px-4 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all resize-none"
-                    placeholder="Share your well wishes..."
+                    placeholder="Comparte tus buenos deseos..."
                   />
                 </div>
 
@@ -173,7 +173,7 @@ function RSVPPage() {
                   type="submit"
                   className="w-full px-6 py-4 rounded-xl bg-primary text-primary-foreground text-sm tracking-widest uppercase hover:bg-primary/90 transition-all duration-300"
                 >
-                  Send RSVP
+                  Enviar Confirmación
                 </button>
               </form>
             </>
@@ -183,16 +183,16 @@ function RSVPPage() {
                 <Check size={28} className="text-primary" />
               </div>
               <h2 className="font-heading text-3xl text-foreground mb-3">
-                Thank You!
+                ¡Gracias!
               </h2>
               <p className="text-muted-foreground mb-8">
-                We have received your response and cannot wait to celebrate with you.
+                Hemos recibido tu respuesta y estamos deseando celebrarlo contigo.
               </p>
               <Link
                 to="/"
                 className="inline-flex items-center justify-center px-8 py-3 rounded-full border border-primary text-primary text-sm tracking-widest uppercase hover:bg-primary hover:text-primary-foreground transition-all duration-300"
               >
-                Back to Home
+                Volver al Inicio
               </Link>
             </div>
           )}
@@ -205,7 +205,7 @@ function RSVPPage() {
             Gorka <span className="text-primary">&</span> Paula
           </p>
           <p className="text-sm text-muted-foreground">
-            June 20, 2026 · Bilbao, Spain
+            11 de octubre de 2026 · Bilbao, España
           </p>
         </div>
       </footer>
